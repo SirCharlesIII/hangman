@@ -1,5 +1,5 @@
-from english_words import get_english_words_set
 from random import choice
+from english_words import get_english_words_set
 
 range_of_words = [
     w
