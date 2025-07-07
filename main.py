@@ -4,13 +4,13 @@ from re import findall
 
 
 def main():
-    tries = []
+    tries = ["_", "_", "_"]
     tried_letter = []
     words = list(get_english_words_set(["web2"], lower=True))
 
     def chosen_word(difficulty: list):
         """Choose a random word based on the difficulty chosen them return a list with
-        the enumerated word, the string with underscores in lenght of the word and 
+        the enumerated word, the string with underscores in lenght of the word and
         marker of correct guesses.
         """
         word = choice(difficulty)
@@ -32,13 +32,13 @@ def main():
                 return choosing_difficulty()
             match difficulty:
                 case 1:
-                    print("You have choosen the easy difficulty.")
+                    print("You have chosen the easy difficulty.")
                     return [w for w in words if len(w) > 4 and len(w) <= 9]
                 case 2:
-                    print("You have choosen the medium difficulty.")
+                    print("You have chosen the medium difficulty.")
                     return [w for w in words if len(w) > 3 and len(w) <= 6]
                 case 3:
-                    print("You have choosen the hard difficulty.")
+                    print("You have chosen the hard difficulty.")
                     return [w for w in words if len(w) == 3]
                 case _:
                     print("You didn't choose a valid difficulty. Please try again.")
@@ -66,7 +66,8 @@ def main():
 
     def letter_in_word(word: list, letter: str):
         """Check if the letter is in the word, if it is change the string with underscores
-        to show the letter then return a list with the word and the new string.
+        to show the letter then return a list with the word and the new string, if it isn't
+        add one 'X' to the tries list
         """
         new_blank = [c for c in word[1]]
         if any(list(map(lambda x: x[1] == letter, word[0]))):
@@ -75,7 +76,7 @@ def main():
             word[1] = "".join(new_blank)
             return word
         else:
-            tries.append('X')
+            tries[tries.index("_")] = "X"
 
     def win_condition(chances: int, word: list):
         if "_" not in word[1] and chances < 3:
@@ -84,20 +85,35 @@ def main():
         else:
             return False
 
+    def restart_prompt():
+        """Ask if the player wants to play again, 'Y' = call for main() 'N' = call for 
+        quit()
+        """
+        restart = input("Do you wanna play again(Y/N)? ")
+        match restart.lower():
+            case "y":
+                main()
+            case "n":
+                print("Thanks for playing!")
+                quit()
+            case _:
+                print("Please enter Y or N.")
+                restart_prompt()
+
     word = chosen_word(choosing_difficulty())
-    count = ["_", "_", "_"]
     while True:
         condition = win_condition(len(tries), word)
         if condition:
-            break
-        elif len(tries) >= 3:
-            count[len(tries) - 1] = tries[len(tries) - 1]
-            print(f"\nYou Lose!\nTries: {"".join(count)}\nThe word was: {''.join([w[1] for w in word[0]])}")
-            break
+            restart_prompt()
+        elif tries.count("X") >= 3:
+            print(
+                f"\nYou Lose!\nTries: {''.join(tries)}\nThe word was: {''.join([w[1] for w in word[0]])}"
+            )
+            restart_prompt()
         else:
-            if tries:
-                count[len(tries) - 1] = tries[len(tries) - 1]
-            print(f"\nTries: {"".join(count)}\nThe word: {word[1]}")
+            print(
+                f"\nTries: {''.join(tries)}\nLetters Tried: {''.join(tried_letter)} \nThe word: {word[1]}"
+            )
             letter_in_word(word, verified_input())
 
 
