@@ -107,7 +107,9 @@ def main():
     while True:
         condition = win_condition(word)
         if condition:
-            print(f"\nTries: {' '.join(tries)}\nLetters Tried: {''.join(tried_letter).lower()} \nThe word: {word[1]}")
+            print(
+                f"\nTries: {' '.join(tries)}\nLetters Tried: {''.join(tried_letter).lower()} \nThe word: {word[1]}"
+            )
             restart_prompt()
         elif tries.count("X") >= len(tries):
             print(
@@ -116,7 +118,7 @@ def main():
             restart_prompt()
         else:
             print(
-                f"\nTries: {' '.join(tries)}\nLetters Tried: {''.join(tried_letter).lower()} \nThe word: {" ".join(word[1])}"
+                f"\nTries: {' '.join(tries)}\nLetters Tried: {''.join(tried_letter).lower()} \nThe word: {' '.join(word[1])}"
             )
             letter_in_word(word, verified_input())
 
