@@ -4,7 +4,7 @@ from re import findall
 
 
 def main():
-    tries = ["_", "_", "_"]
+    tries = []
     tried_letter = []
     words = list(get_english_words_set(["web2"], lower=True))
 
@@ -18,7 +18,7 @@ def main():
 
     def choosing_difficulty():
         """Choose a difficulty between 1(Easy), 2(Medium) and 3 (Hard) then return an
-        array with words based in which difficulty was chosen.
+        array with words based in which difficulty was chosen and modify the tries list.
         """
         while True:
             try:
@@ -33,12 +33,15 @@ def main():
             match difficulty:
                 case 1:
                     print("You have chosen the easy difficulty.")
+                    tries.extend(["_" for n in range(6)])
                     return [w for w in words if len(w) > 4 and len(w) <= 9]
                 case 2:
                     print("You have chosen the medium difficulty.")
+                    tries.extend(["_" for n in range(4)])
                     return [w for w in words if len(w) > 3 and len(w) <= 6]
                 case 3:
                     print("You have chosen the hard difficulty.")
+                    tries.extend(["_" for n in range(3)])
                     return [w for w in words if len(w) == 3]
                 case _:
                     print("You didn't choose a valid difficulty. Please try again.")
@@ -78,15 +81,15 @@ def main():
         else:
             tries[tries.index("_")] = "X"
 
-    def win_condition(chances: int, word: list):
-        if "_" not in word[1] and chances < 3:
+    def win_condition(word: list):
+        if "_" not in word[1]:
             print("\nYou won!")
             return True
         else:
             return False
 
     def restart_prompt():
-        """Ask if the player wants to play again, 'Y' = call for main() 'N' = call for 
+        """Ask if the player wants to play again, 'Y' = call for main() 'N' = call for
         quit()
         """
         restart = input("Do you wanna play again(Y/N)? ")
@@ -102,17 +105,18 @@ def main():
 
     word = chosen_word(choosing_difficulty())
     while True:
-        condition = win_condition(len(tries), word)
+        condition = win_condition(word)
         if condition:
+            print(f"\nTries: {' '.join(tries)}\nLetters Tried: {''.join(tried_letter).lower()} \nThe word: {word[1]}")
             restart_prompt()
-        elif tries.count("X") >= 3:
+        elif tries.count("X") >= len(tries):
             print(
-                f"\nYou Lose!\nTries: {''.join(tries)}\nThe word was: {''.join([w[1] for w in word[0]])}"
+                f"\nYou Lose!\nTries: {' '.join(tries)}\nThe word was: {''.join([w[1] for w in word[0]])}"
             )
             restart_prompt()
         else:
             print(
-                f"\nTries: {''.join(tries)}\nLetters Tried: {''.join(tried_letter)} \nThe word: {word[1]}"
+                f"\nTries: {' '.join(tries)}\nLetters Tried: {''.join(tried_letter).lower()} \nThe word: {" ".join(word[1])}"
             )
             letter_in_word(word, verified_input())
 
